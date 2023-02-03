@@ -19,22 +19,14 @@ public class BeanMovement : MonoBehaviour
     [SerializeField]
     private Camera camera;
 
+    public Animator animator;
+
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         _input = GetComponent<InputHandler>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet"))
-        {
-            OnDestroy();
-        }
-        else if (other.CompareTag("Boom"))
-        {
-            OnDestroy();
-        }
-    }
 
 
     private void Update()
@@ -43,11 +35,19 @@ public class BeanMovement : MonoBehaviour
 
         //Move in the direction your aiming
         var movementVector = MoveTowardsTarget(targetVector);
+        animator.SetFloat("speed", movementVector.magnitude); 
         if (!rotateTwoardsMouse)
             //Rotate in the direction your traveling
             RotatetwoardMovementVector(movementVector);
         else
+        {
             RotatetwoardMouseVector();
+        }
+
+        if( Input.GetButtonDown("Fire1"))
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 
     private void RotatetwoardMouseVector()
